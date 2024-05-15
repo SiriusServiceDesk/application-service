@@ -10,7 +10,7 @@ import (
 type Application struct{}
 
 func InitApplication(app *fiber.App) {
-	repository.NewExampleRepository()
+	repository.NewApplicationRepository()
 
 	container := &dependencies.Container{}
 
