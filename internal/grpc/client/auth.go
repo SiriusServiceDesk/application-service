@@ -22,14 +22,14 @@ func createConnectionToAuthService() (auth_v1.AuthV1Client, error) {
 	return auth_v1.NewAuthV1Client(conn), nil
 }
 
-func GetUserIdFromToken(token string) (string, error) {
+func GetUserIdFromToken(header []string) (string, error) {
 	conn, err := createConnectionToAuthService()
 	if err != nil {
 		return "", err
 	}
 	ctx := context.Background()
 
-	response, err := conn.GetUserIdFromToken(ctx, &auth_v1.GetUserIdFromTokenRequest{Token: token})
+	response, err := conn.GetUserIdFromToken(ctx, &auth_v1.GetUserIdFromTokenRequest{Header: header})
 	if err != nil {
 		return "", err
 	}
