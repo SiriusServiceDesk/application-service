@@ -5,7 +5,7 @@ import "time"
 type Application struct {
 	Id              uint      `json:"id" gorm:"primaryKey"`
 	Title           string    `json:"title"`
-	Status          status    `json:"status"`
+	Status          Status    `json:"status"`
 	Priority        string    `json:"priority"`
 	PerformerId     string    `json:"performer"`
 	Comment         *string   `json:"comment"`
@@ -15,10 +15,10 @@ type Application struct {
 	UpdatedAt       time.Time `json:"updated_at"`
 }
 
-type status string
+type Status string
 
 const (
-	InProgress status = "in_progress"
-	Pending    status = "pending"
-	Executed   status = "executed"
+	InProgress Status = "in_progress"
+	Pending    Status = "pending"
+	Executed   Status = "executed"
 )
