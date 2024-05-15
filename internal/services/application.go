@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/urcop/go-fiber-template/internal/models"
-	"github.com/urcop/go-fiber-template/internal/repository"
+	"github.com/SiriusServiceDesk/application-service/internal/models"
+	"github.com/SiriusServiceDesk/application-service/internal/repository"
 	"time"
 )
 

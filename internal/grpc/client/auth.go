@@ -2,9 +2,9 @@ package client
 
 import (
 	"context"
+	"github.com/SiriusServiceDesk/application-service/internal/config"
+	"github.com/SiriusServiceDesk/application-service/pkg/logger"
 	"github.com/SiriusServiceDesk/gateway-service/pkg/auth_v1"
-	"github.com/urcop/go-fiber-template/internal/config"
-	"github.com/urcop/go-fiber-template/pkg/logger"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )

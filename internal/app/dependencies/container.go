@@ -1,6 +1,6 @@
 package dependencies
 
-import "github.com/urcop/go-fiber-template/internal/services"
+import "github.com/SiriusServiceDesk/application-service/internal/services"
 
 type Container struct {
 	ApplicationService services.ApplicationService

@@ -1,8 +1,8 @@
 package config
 
 import (
+	"github.com/SiriusServiceDesk/application-service/pkg/logger"
 	"github.com/ilyakaznacheev/cleanenv"
-	"github.com/urcop/go-fiber-template/pkg/logger"
 	"os"
 )
 

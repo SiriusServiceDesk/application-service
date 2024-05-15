@@ -1,11 +1,11 @@
 package app
 
 import (
+	"github.com/SiriusServiceDesk/application-service/internal/app/dependencies"
+	"github.com/SiriusServiceDesk/application-service/internal/app/initializers"
+	"github.com/SiriusServiceDesk/application-service/internal/repository"
+	"github.com/SiriusServiceDesk/application-service/internal/services"
 	"github.com/gofiber/fiber/v2"
-	"github.com/urcop/go-fiber-template/internal/app/dependencies"
-	"github.com/urcop/go-fiber-template/internal/app/initializers"
-	"github.com/urcop/go-fiber-template/internal/repository"
-	"github.com/urcop/go-fiber-template/internal/services"
 )
 
 type Application struct{}
