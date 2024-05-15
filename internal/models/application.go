@@ -1,7 +1,7 @@
 package models
 
 type Application struct {
-	Id              string  `json:"id"`
+	Id              uint    `json:"id" gorm:"primaryKey"`
 	Title           string  `json:"title"`
 	Status          string  `json:"status"`
 	Priority        string  `json:"priority"`

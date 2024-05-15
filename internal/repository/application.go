@@ -10,7 +10,7 @@ import (
 
 type ApplicationRepository interface {
 	Get() ([]*models.Application, error)
-	GetByApplicationId(id string) (*models.Application, error)
+	GetByApplicationId(id uint) (*models.Application, error)
 	GetByUserId(userId string) ([]*models.Application, error)
 	Create(application *models.Application) error
 	Update(application *models.Application) error
@@ -24,7 +24,7 @@ func (a ApplicationRepositoryImpl) Get() ([]*models.Application, error) {
 	return applications, nil
 }
 
-func (a ApplicationRepositoryImpl) GetByApplicationId(id string) (*models.Application, error) {
+func (a ApplicationRepositoryImpl) GetByApplicationId(id uint) (*models.Application, error) {
 	var application *models.Application
 	if err := a.db.Where(models.Application{Id: id}).First(&application).Error; err != nil {
 		return nil, err
