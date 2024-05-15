@@ -1,8 +1,8 @@
 package config
 
 import (
+	"github.com/SiriusServiceDesk/application-service/pkg/logger"
 	"github.com/ilyakaznacheev/cleanenv"
-	"github.com/urcop/go-fiber-template/pkg/logger"
 	"os"
 )
 
@@ -20,9 +20,14 @@ type Db struct {
 }
 
 type Config struct {
-	Env        string     `yaml:"env" env-required:"true"`
-	HttpServer HttpServer `yaml:"http_server"`
-	Db         Db         `yaml:"db"`
+	Env         string      `yaml:"env" env-required:"true"`
+	HttpServer  HttpServer  `yaml:"http_server"`
+	Db          Db          `yaml:"db"`
+	AuthService AuthService `yaml:"auth_service"`
+}
+
+type AuthService struct {
+	Address string `yaml:"address"`
 }
 
 func GetConfig() *Config {

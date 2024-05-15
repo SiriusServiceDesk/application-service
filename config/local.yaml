@@ -8,3 +8,5 @@ db:
   user: postgres
   password: postgres
   db_name: postgres
+auth_service:
+  address: auth-service:3000
