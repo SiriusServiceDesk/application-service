@@ -31,7 +31,11 @@ func (ctrl *Controller) DefineRouter(app *fiber.App) {
 }
 
 func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
-	panic("not implemented")
+	applications, err := ctrl.applicationService.GetAllApplications()
+	if err != nil {
+		return Response().WithDetails(err).ServerInternalError(ctx, "failed to get applications from database")
+	}
+	return Response().StatusOK(ctx, mappingApplicationsForUser(applications))
 }
 
 func (ctrl *Controller) getApplication(ctx *fiber.Ctx) error {

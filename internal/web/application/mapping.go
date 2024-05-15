@@ -9,10 +9,25 @@ func mappingApplicationForUser(application *models.Application) GetApplicationUs
 		Id:              application.Id,
 		Title:           application.Title,
 		Status:          application.Status,
-		Priority:        application.Priority,
 		Comment:         application.Comment,
 		ApplicantId:     application.ApplicantId,
 		ExecutionPeriod: application.ExecutionPeriod,
 		CreatedAt:       application.CreatedAt,
 	}
+}
+
+func mappingApplicationsForUser(applications []*models.Application) []GetApplicationUserResponse {
+	var result []GetApplicationUserResponse
+	for _, application := range applications {
+		result = append(result, GetApplicationUserResponse{
+			Id:              application.Id,
+			Title:           application.Title,
+			Status:          application.Status,
+			Comment:         application.Comment,
+			ApplicantId:     application.ApplicantId,
+			ExecutionPeriod: application.ExecutionPeriod,
+			CreatedAt:       application.CreatedAt,
+		})
+	}
+	return result
 }
