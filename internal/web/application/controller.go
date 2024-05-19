@@ -2,11 +2,11 @@ package application
 
 import (
 	"github.com/SiriusServiceDesk/application-service/internal/grpc/client"
+	"github.com/SiriusServiceDesk/application-service/internal/helpers"
 	"github.com/SiriusServiceDesk/application-service/internal/middleware"
 	"github.com/SiriusServiceDesk/application-service/internal/models"
 	"github.com/SiriusServiceDesk/application-service/internal/services"
 	"github.com/gofiber/fiber/v2"
-	"strconv"
 )
 
 type Controller struct {
@@ -41,12 +41,12 @@ func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
 func (ctrl *Controller) getApplication(ctx *fiber.Ctx) error {
 	applicationId := ctx.Params("id")
 
-	applicationIdInt, err := strconv.Atoi(applicationId)
+	applicationIdInt, err := helpers.FormatIdFromStringToUint(applicationId)
 	if err != nil {
 		return Response().WithDetails(err).ServerInternalError(ctx, "failed to convert from parameter")
 	}
 
-	application, err := ctrl.applicationService.GetApplicationById(uint(applicationIdInt))
+	application, err := ctrl.applicationService.GetApplicationById(applicationIdInt)
 	if err != nil {
 		return Response().WithDetails(err).ServerInternalError(ctx, "failed to get application from database")
 	}

@@ -6,7 +6,7 @@ import (
 )
 
 type GetApplicationUserResponse struct {
-	Id              uint          `json:"id"`
+	Id              string        `json:"id"`
 	Title           string        `json:"title"`
 	Status          models.Status `json:"status"`
 	Performer       string        `json:"performer"`
