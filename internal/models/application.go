@@ -21,5 +21,5 @@ const (
 	InProgress Status = "В работе"
 	Pending    Status = "Создана"
 	Executed   Status = "Выполнена"
-	Canceled   Status = "Отменена"
+	Canceled   Status = "Отклонена"
 )
