@@ -9,6 +9,7 @@ type GetApplicationUserResponse struct {
 	Id              uint          `json:"id"`
 	Title           string        `json:"title"`
 	Status          models.Status `json:"status"`
+	Performer       string        `json:"performer"`
 	Priority        string        `json:"priority"`
 	Comment         *string       `json:"comment"`
 	ApplicantId     string        `json:"applicant"`

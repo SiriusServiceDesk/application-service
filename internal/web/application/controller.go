@@ -70,7 +70,7 @@ func (ctrl *Controller) createApplication(ctx *fiber.Ctx) error {
 	application := &models.Application{
 		Title:       request.Title,
 		Status:      models.Pending,
-		PerformerId: userId,
+		ApplicantId: userId,
 		Comment:     request.Comment,
 	}
 

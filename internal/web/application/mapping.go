@@ -11,6 +11,7 @@ func mappingApplicationForUser(application *models.Application) GetApplicationUs
 		Status:          application.Status,
 		Comment:         application.Comment,
 		ApplicantId:     application.ApplicantId,
+		Performer:       application.PerformerId,
 		ExecutionPeriod: application.ExecutionPeriod,
 		CreatedAt:       application.CreatedAt,
 	}
@@ -25,6 +26,7 @@ func mappingApplicationsForUser(applications []*models.Application) []GetApplica
 			Status:          application.Status,
 			Comment:         application.Comment,
 			ApplicantId:     application.ApplicantId,
+			Performer:       application.PerformerId,
 			ExecutionPeriod: application.ExecutionPeriod,
 			CreatedAt:       application.CreatedAt,
 		})
