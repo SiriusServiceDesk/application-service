@@ -18,7 +18,8 @@ type Application struct {
 type Status string
 
 const (
-	InProgress Status = "Заявка принята"
-	Pending    Status = "В работе"
+	InProgress Status = "В работе"
+	Pending    Status = "Заявка принята"
 	Executed   Status = "Выполнена"
+	Canceled   Status = "Отменена"
 )
