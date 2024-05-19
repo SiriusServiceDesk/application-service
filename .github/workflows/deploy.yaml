@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push the Docker image to Docker Hub
-        run: docker tag myapp:latest ${{ secrets.DOCKER_USERNAME }}/application-service:latest
+        run: docker tag application-service:latest ${{ secrets.DOCKER_USERNAME }}/application-service:latest
       - run: docker push ${{ secrets.DOCKER_USERNAME }}/application-service:latest
 
   deploy:
