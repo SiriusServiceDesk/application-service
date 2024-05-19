@@ -33,10 +33,29 @@ func (ctrl *Controller) DefineRouter(app *fiber.App) {
 }
 
 func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
-	applications, err := ctrl.applicationService.GetAllApplications()
+	var applications []*models.Application
+	authHeaders := ctx.GetReqHeaders()[fiber.HeaderAuthorization]
+
+	userId, err := client.GetUserIdFromToken(authHeaders)
+	if err != nil {
+		return Response().WithDetails(err).ServerInternalError(ctx, "cant get user id")
+	}
+
+	user, err := client.GetUserById(userId)
+	if err != nil {
+		return Response().WithDetails(err).ServerInternalError(ctx, "cant get user")
+	}
+
+	if user.GetRole() == "Админ" {
+		applications, err = ctrl.applicationService.GetAllApplications()
+	} else {
+		applications, err = ctrl.applicationService.GetApplicationByUserId(userId)
+	}
+
 	if err != nil {
 		return Response().WithDetails(err).ServerInternalError(ctx, "failed to get applications from database")
 	}
+
 	return Response().StatusOK(ctx, mappingApplicationsForUser(applications))
 }
 
