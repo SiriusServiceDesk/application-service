@@ -36,3 +36,18 @@ func GetUserIdFromToken(header []string) (string, error) {
 
 	return response.GetUserId(), nil
 }
+
+func GetUserById(userId string) (*auth_v1.GetUserByIdResponse, error) {
+	conn, err := createConnectionToAuthService()
+	if err != nil {
+		return nil, err
+	}
+
+	ctx := context.Background()
+	response, err := conn.GetUserById(ctx, &auth_v1.GetUserByIdRequest{UserId: userId})
+	if err != nil {
+		return nil, err
+	}
+
+	return response, nil
+}
