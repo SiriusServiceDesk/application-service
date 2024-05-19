@@ -72,6 +72,7 @@ func (ctrl *Controller) createApplication(ctx *fiber.Ctx) error {
 		Status:      models.Pending,
 		ApplicantId: userId,
 		Comment:     request.Comment,
+		PerformerId: request.Performer,
 	}
 
 	if err := ctrl.applicationService.CreateApplication(application); err != nil {

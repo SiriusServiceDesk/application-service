@@ -17,6 +17,7 @@ type GetApplicationUserResponse struct {
 }
 
 type CreateApplicationRequest struct {
-	Title   string  `json:"title"`
-	Comment *string `json:"comment"`
+	Title     string  `json:"title"`
+	Comment   *string `json:"comment"`
+	Performer string  `json:"performer"`
 }
