@@ -54,4 +54,9 @@ jobs:
             docker stop application-service || true
             docker rm application-service || true
             echo "${{ secrets.PROD_CONFIG }} > /config/prod.yaml"
-            docker run -d --name application-service -e CONFIG_PATH=/config/prod.yaml -v ~/serviceDesk/application-service/config:/config -p 8003:8000 -p 3003:3000 --network sirius-service-desk ${{ secrets.DOCKER_USERNAME }}/application-service:latest
+            docker run -d --name application-service \\ 
+              -e CONFIG_PATH=/config/prod.yaml \\
+              -v ~/serviceDesk/application-service/config:/config \\
+              -p 8003:8000 -p 3003:3000 \\
+              --restart unless-stop
+              --network sirius-service-desk ${{ secrets.DOCKER_USERNAME }}/application-service:latest
