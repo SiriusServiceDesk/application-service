@@ -2,7 +2,6 @@ package application
 
 import (
 	"github.com/SiriusServiceDesk/application-service/internal/models"
-	"time"
 )
 
 type GetApplicationUserResponse struct {
@@ -14,7 +13,7 @@ type GetApplicationUserResponse struct {
 	Comment         *string       `json:"comment"`
 	ApplicantId     string        `json:"applicant"`
 	ExecutionPeriod string        `json:"execution_period"`
-	CreatedAt       time.Time     `json:"create_date"`
+	CreatedAt       string        `json:"create_date"`
 }
 
 type CreateApplicationRequest struct {

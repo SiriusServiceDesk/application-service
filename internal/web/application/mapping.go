@@ -14,7 +14,7 @@ func mappingApplicationForUser(application *models.Application) GetApplicationUs
 		ApplicantId:     application.ApplicantId,
 		Performer:       application.PerformerId,
 		ExecutionPeriod: application.ExecutionPeriod,
-		CreatedAt:       application.CreatedAt,
+		CreatedAt:       helpers.FormatDate(application.CreatedAt),
 	}
 }
 
@@ -29,7 +29,7 @@ func mappingApplicationsForUser(applications []*models.Application) []GetApplica
 			ApplicantId:     application.ApplicantId,
 			Performer:       application.PerformerId,
 			ExecutionPeriod: application.ExecutionPeriod,
-			CreatedAt:       application.CreatedAt,
+			CreatedAt:       helpers.FormatDate(application.CreatedAt),
 		})
 	}
 	return result
