@@ -33,9 +33,4 @@ COPY --from=builder /build/api .
 COPY --from=builder /build/app .
 COPY --from=builder /build/config/ /config/
 
-ENV CONFIG_PATH=/config/prod.yaml
-ENV LOG_NAMESPACE=application-service
-ENV LOG_MODE=production
-
-#CMD ["ls", "config/"]
 CMD ["/app/app", "s"]
