@@ -19,7 +19,7 @@ type Status string
 
 const (
 	InProgress Status = "В работе"
-	Pending    Status = "Заявка принята"
+	Pending    Status = "Создана"
 	Executed   Status = "Выполнена"
 	Canceled   Status = "Отменена"
 )
