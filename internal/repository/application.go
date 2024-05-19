@@ -14,6 +14,16 @@ type ApplicationRepository interface {
 	GetByUserId(userId string) ([]*models.Application, error)
 	Create(application *models.Application) error
 	Update(application *models.Application) error
+	GetApplicationsByUser(userId string) ([]*models.Application, error)
+}
+
+func (a ApplicationRepositoryImpl) GetApplicationsByUser(userId string) ([]*models.Application, error) {
+	var applications []*models.Application
+	if err := a.db.Where(models.Application{ApplicantId: userId}).Find(&applications).Error; err != nil {
+		return nil, err
+	}
+
+	return applications, nil
 }
 
 func (a ApplicationRepositoryImpl) Get() ([]*models.Application, error) {
@@ -34,7 +44,7 @@ func (a ApplicationRepositoryImpl) GetByApplicationId(id uint) (*models.Applicat
 
 func (a ApplicationRepositoryImpl) GetByUserId(userId string) ([]*models.Application, error) {
 	var application []*models.Application
-	if err := a.db.Where(models.Application{PerformerId: userId}).Find(&application).Error; err != nil {
+	if err := a.db.Where(models.Application{ApplicantId: userId}).Find(&application).Error; err != nil {
 		return nil, err
 	}
 	return application, nil

@@ -10,8 +10,13 @@ type ApplicationService interface {
 	GetAllApplications() ([]*models.Application, error)
 	GetApplicationByUserId(userId string) ([]*models.Application, error)
 	GetApplicationById(id uint) (*models.Application, error)
+	GetApplicationsByUser(userId string) ([]*models.Application, error)
 	CreateApplication(application *models.Application) error
 	UpdateApplication(application *models.Application, id uint) error
+}
+
+func (a ApplicationServiceImpl) GetApplicationsByUser(userId string) ([]*models.Application, error) {
+	return a.repos.GetApplicationsByUser(userId)
 }
 
 func (a ApplicationServiceImpl) GetAllApplications() ([]*models.Application, error) {

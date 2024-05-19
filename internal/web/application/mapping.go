@@ -32,5 +32,10 @@ func mappingApplicationsForUser(applications []*models.Application) []GetApplica
 			CreatedAt:       helpers.FormatDate(application.CreatedAt),
 		})
 	}
+
+	if len(result) == 0 {
+		result = []GetApplicationUserResponse{}
+	}
+
 	return result
 }
