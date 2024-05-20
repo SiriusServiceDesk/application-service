@@ -1,12 +1,73 @@
 definitions:
-  github.com_urcop_go-fiber-template_internal_web_status.Response:
+  github_com_SiriusServiceDesk_application-service_internal_models.Status:
+    enum:
+    - В работе
+    - Создана
+    - Выполнена
+    - Отклонена
+    type: string
+    x-enum-varnames:
+    - InProgress
+    - Pending
+    - Executed
+    - Canceled
+  internal_web_application.CreateApplicationRequest:
     properties:
-      code:
+      comment:
+        example: любой коментарий ваще
+        type: string
+      performer:
+        example: Методический отдел
+        type: string
+      title:
+        example: сломался компутир
+        type: string
+    type: object
+  internal_web_application.GetApplicationUserResponseDoc:
+    properties:
+      details: {}
+      payload:
+        properties:
+          applicant:
+            example: 23ger34-khsdb23G-23afh75-sdHvd
+            type: string
+          comment:
+            example: любой коментарий ваще
+            type: string
+          create_date:
+            example: 21.05.2024
+            type: string
+          execution_period:
+            example: 7 рабочих дней
+            type: string
+          id:
+            example: "000000001"
+            type: string
+          performer:
+            example: Методический отдел
+            type: string
+          priority:
+            example: низкий
+            type: string
+          status:
+            allOf:
+            - $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Status'
+            example: Создана
+          title:
+            example: сломался кампутир
+            type: string
+        type: object
+      status:
+        example: 200
         type: integer
-      data:
-        type: string
-      message:
-        type: string
+    type: object
+  internal_web_application.RawResponse:
+    properties:
+      details: {}
+      payload: {}
+      status:
+        example: 200
+        type: integer
     type: object
   internal_web_status.Response:
     properties:
@@ -32,4 +93,101 @@ paths:
           schema:
             $ref: '#/definitions/internal_web_status.Response'
       summary: Get the status
+  /v1/applications:
+    get:
+      description: Получает список заявок для администратора или пользователя
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/internal_web_application.GetApplicationUserResponseDoc'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_web_application.RawResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Получить заявки
+      tags:
+      - applications
+    post:
+      consumes:
+      - application/json
+      description: Создает новую заявку
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Создание заявки
+        in: body
+        name: application
+        required: true
+        schema:
+          $ref: '#/definitions/internal_web_application.CreateApplicationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_web_application.RawResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_web_application.RawResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_web_application.RawResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Создать заявку
+      tags:
+      - applications
+  /v1/applications/{id}:
+    get:
+      description: Получает заявку по ID для администратора или пользователя
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: ID заявки
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_web_application.GetApplicationUserResponseDoc'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/internal_web_application.RawResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/internal_web_application.RawResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Получить заявку
+      tags:
+      - applications
 swagger: "2.0"

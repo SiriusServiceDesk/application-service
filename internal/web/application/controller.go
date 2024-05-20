@@ -32,6 +32,16 @@ func (ctrl *Controller) DefineRouter(app *fiber.App) {
 	applicationGroup.Put("/:id", ctrl.updateApplication)
 }
 
+// getApplications получает список заявок
+// @Summary Получить заявки
+// @Description Получает список заявок для администратора или пользователя
+// @Param Authorization header string true "Bearer <token>"
+// @Tags applications
+// @Produce json
+// @Success 200 {array} GetApplicationUserResponseDoc
+// @Failure 500 {object} RawResponse
+// @Router /v1/applications [get]
+// @Security ApiKeyAuth
 func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
 	var applications []*models.Application
 	authHeaders := ctx.GetReqHeaders()[fiber.HeaderAuthorization]
@@ -59,6 +69,18 @@ func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
 	return Response().StatusOK(ctx, mappingApplicationsForUser(applications))
 }
 
+// getApplication получает заявку по ID
+// @Summary Получить заявку
+// @Description Получает заявку по ID для администратора или пользователя
+// @Tags applications
+// @Param Authorization header string true "Bearer <token>"
+// @Produce json
+// @Param id path int true "ID заявки"
+// @Success 200 {object} GetApplicationUserResponseDoc
+// @Failure 400 {object} RawResponse
+// @Failure 500 {object} RawResponse
+// @Router /v1/applications/{id} [get]
+// @Security ApiKeyAuth
 func (ctrl *Controller) getApplication(ctx *fiber.Ctx) error {
 	applicationId := ctx.Params("id")
 	authHeaders := ctx.GetReqHeaders()[fiber.HeaderAuthorization]
@@ -92,6 +114,19 @@ func (ctrl *Controller) getApplication(ctx *fiber.Ctx) error {
 	return Response().StatusOK(ctx, mappingApplicationForUser(application))
 }
 
+// createApplication создает новую заявку
+// @Summary Создать заявку
+// @Description Создает новую заявку
+// @Tags applications
+// @Param Authorization header string true "Bearer <token>"
+// @Accept json
+// @Produce json
+// @Param application body CreateApplicationRequest true "Создание заявки"
+// @Success 200 {object} RawResponse
+// @Failure 400 {object} RawResponse
+// @Failure 500 {object} RawResponse
+// @Router /v1/applications [post]
+// @Security ApiKeyAuth
 func (ctrl *Controller) createApplication(ctx *fiber.Ctx) error {
 	var request CreateApplicationRequest
 	authHeader := ctx.GetReqHeaders()[fiber.HeaderAuthorization]
