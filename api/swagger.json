@@ -21,20 +21,256 @@
                     }
                 }
             }
+        },
+        "/v1/applications": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получает список заявок для администратора или пользователя",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "applications"
+                ],
+                "summary": "Получить заявки",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer \u003ctoken\u003e",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/internal_web_application.GetApplicationUserResponseDoc"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_web_application.RawResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Создает новую заявку",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "applications"
+                ],
+                "summary": "Создать заявку",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer \u003ctoken\u003e",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Создание заявки",
+                        "name": "application",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_web_application.CreateApplicationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_web_application.RawResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_web_application.RawResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_web_application.RawResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/applications/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Получает заявку по ID для администратора или пользователя",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "applications"
+                ],
+                "summary": "Получить заявку",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer \u003ctoken\u003e",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "ID заявки",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/internal_web_application.GetApplicationUserResponseDoc"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/internal_web_application.RawResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/internal_web_application.RawResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "github.com_urcop_go-fiber-template_internal_web_status.Response": {
+        "github_com_SiriusServiceDesk_application-service_internal_models.Status": {
+            "type": "string",
+            "enum": [
+                "В работе",
+                "Создана",
+                "Выполнена",
+                "Отклонена"
+            ],
+            "x-enum-varnames": [
+                "InProgress",
+                "Pending",
+                "Executed",
+                "Canceled"
+            ]
+        },
+        "internal_web_application.CreateApplicationRequest": {
             "type": "object",
             "properties": {
-                "code": {
-                    "type": "integer"
+                "comment": {
+                    "type": "string",
+                    "example": "любой коментарий ваще"
                 },
-                "data": {
-                    "type": "string"
+                "performer": {
+                    "type": "string",
+                    "example": "Методический отдел"
                 },
-                "message": {
-                    "type": "string"
+                "title": {
+                    "type": "string",
+                    "example": "сломался компутир"
+                }
+            }
+        },
+        "internal_web_application.GetApplicationUserResponseDoc": {
+            "type": "object",
+            "properties": {
+                "details": {},
+                "payload": {
+                    "type": "object",
+                    "properties": {
+                        "applicant": {
+                            "type": "string",
+                            "example": "23ger34-khsdb23G-23afh75-sdHvd"
+                        },
+                        "comment": {
+                            "type": "string",
+                            "example": "любой коментарий ваще"
+                        },
+                        "create_date": {
+                            "type": "string",
+                            "example": "21.05.2024"
+                        },
+                        "execution_period": {
+                            "type": "string",
+                            "example": "7 рабочих дней"
+                        },
+                        "id": {
+                            "type": "string",
+                            "example": "000000001"
+                        },
+                        "performer": {
+                            "type": "string",
+                            "example": "Методический отдел"
+                        },
+                        "priority": {
+                            "type": "string",
+                            "example": "низкий"
+                        },
+                        "status": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Status"
+                                }
+                            ],
+                            "example": "Создана"
+                        },
+                        "title": {
+                            "type": "string",
+                            "example": "сломался кампутир"
+                        }
+                    }
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        },
+        "internal_web_application.RawResponse": {
+            "type": "object",
+            "properties": {
+                "details": {},
+                "payload": {},
+                "status": {
+                    "type": "integer",
+                    "example": 200
                 }
             }
         },
