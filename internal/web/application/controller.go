@@ -138,6 +138,7 @@ func (ctrl *Controller) createApplication(ctx *fiber.Ctx) error {
 		ApplicantId: userId,
 		Comment:     request.Comment,
 		PerformerId: request.Performer,
+		Priority:    models.NotSet,
 	}
 
 	if err := ctrl.applicationService.CreateApplication(application); err != nil {

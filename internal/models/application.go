@@ -31,4 +31,5 @@ const (
 	Low    Priority = "Низкий"
 	Medium Priority = "Средний"
 	High   Priority = "Высокий"
+	NotSet Priority = "Не назначен"
 )
