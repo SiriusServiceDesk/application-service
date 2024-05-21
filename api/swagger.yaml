@@ -11,19 +11,50 @@ definitions:
     - Pending
     - Executed
     - Canceled
-  internal_web_application.CreateApplicationRequest:
+  github_com_SiriusServiceDesk_application-service_internal_web.CreateApplicationRequest:
     properties:
       comment:
-        example: любой коментарий ваще
+        example: любой коммент или пустота
         type: string
       performer:
         example: Методический отдел
         type: string
       title:
-        example: сломался компутир
+        example: Любой заголовок до 20 символов
         type: string
     type: object
-  internal_web_application.GetApplicationUserResponseDoc:
+  github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponse:
+    properties:
+      applicant:
+        example: 23ger34-khsdb23G-23afh75-sdHvd
+        type: string
+      comment:
+        example: любой коментарий ваще
+        type: string
+      create_date:
+        example: 21.05.2024
+        type: string
+      execution_period:
+        example: 7 рабочих дней
+        type: string
+      id:
+        example: "000000001"
+        type: string
+      performer:
+        example: Методический отдел
+        type: string
+      priority:
+        example: низкий
+        type: string
+      status:
+        allOf:
+        - $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Status'
+        example: Создана
+      title:
+        example: сломался кампутир
+        type: string
+    type: object
+  github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponseDoc:
     properties:
       details: {}
       payload:
@@ -61,7 +92,21 @@ definitions:
         example: 200
         type: integer
     type: object
-  internal_web_application.RawResponse:
+  github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsUserResponseDoc:
+    properties:
+      details: {}
+      payload:
+        properties:
+          applications:
+            items:
+              $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponse'
+            type: array
+        type: object
+      status:
+        example: 200
+        type: integer
+    type: object
+  github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse:
     properties:
       details: {}
       payload: {}
@@ -93,6 +138,35 @@ paths:
           schema:
             $ref: '#/definitions/internal_web_status.Response'
       summary: Get the status
+  /v1/admin/applications/:
+    get:
+      consumes:
+      - application/json
+      description: Get all applications (Admin only)
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsUserResponseDoc'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
+      summary: Get Applications
+      tags:
+      - admin
   /v1/applications:
     get:
       description: Получает список заявок для администратора или пользователя
@@ -109,12 +183,12 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/internal_web_application.GetApplicationUserResponseDoc'
+              $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsUserResponseDoc'
             type: array
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/internal_web_application.RawResponse'
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
       security:
       - ApiKeyAuth: []
       summary: Получить заявки
@@ -135,22 +209,22 @@ paths:
         name: application
         required: true
         schema:
-          $ref: '#/definitions/internal_web_application.CreateApplicationRequest'
+          $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.CreateApplicationRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/internal_web_application.RawResponse'
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/internal_web_application.RawResponse'
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/internal_web_application.RawResponse'
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
       security:
       - ApiKeyAuth: []
       summary: Создать заявку
@@ -176,15 +250,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/internal_web_application.GetApplicationUserResponseDoc'
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponseDoc'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/internal_web_application.RawResponse'
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/internal_web_application.RawResponse'
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
       security:
       - ApiKeyAuth: []
       summary: Получить заявку
