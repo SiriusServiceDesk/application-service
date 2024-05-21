@@ -73,21 +73,20 @@ func (ctrl *Controller) analytic(ctx *fiber.Ctx) error {
 		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get applications")
 	}
 
-	today := time.Now().Format("2006-01-02")
-	todayStatues := []models.Status{models.Canceled, models.InProgress, models.Pending, models.Executed}
-
-	newApplicationsToday, err := ctrl.applicationService.GetProcessedApplicationsWithDate(todayStatues, today)
+	todayStatues := []models.Status{models.Pending}
+	newApplications, err := ctrl.applicationService.GetProcessedApplications(todayStatues)
 	if err != nil {
 		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get applications")
 	}
 
+	today := time.Now().Format("2006-01-02")
 	todayProcessed, err := ctrl.applicationService.GetProcessedApplicationsWithDate(processedStatuses, today)
 	if err != nil {
 		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get applications")
 	}
 
 	analyticResponse := web.AnalyticResponse{
-		NewApplicationsToday:     len(newApplicationsToday),
+		NewApplicationsToday:     len(newApplications),
 		AllProcessedApplications: len(allProcessed),
 		ProcessedToday:           len(todayProcessed),
 		InProgress:               len(inProgress),

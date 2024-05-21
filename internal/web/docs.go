@@ -47,10 +47,10 @@ type UpdateApplicationRequest struct {
 }
 
 type AnalyticResponse struct {
-	NewApplicationsToday     int `json:"new_today"`
-	AllProcessedApplications int `json:"processed"`
+	NewApplicationsToday     int `json:"pending"`
 	ProcessedToday           int `json:"processed_today"`
 	InProgress               int `json:"in_progress"`
+	AllProcessedApplications int `json:"processed"`
 }
 
 type AnalyticResponseDoc struct {
