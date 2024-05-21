@@ -3,6 +3,7 @@ package application
 import (
 	"github.com/SiriusServiceDesk/application-service/internal/helpers"
 	"github.com/SiriusServiceDesk/application-service/internal/models"
+	"sort"
 )
 
 func mappingApplicationForUser(application *models.Application) GetApplicationUserResponse {
@@ -36,6 +37,10 @@ func mappingApplicationsForUser(applications []*models.Application) []GetApplica
 	if len(result) == 0 {
 		result = []GetApplicationUserResponse{}
 	}
+
+	sort.Slice(result, func(i, j int) bool {
+		return result[i].Id > result[j].Id
+	})
 
 	return result
 }
