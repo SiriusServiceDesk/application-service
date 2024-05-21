@@ -1,7 +1,8 @@
-package application
+package web
 
 import (
 	"github.com/SiriusServiceDesk/application-service/internal/models"
+	"github.com/SiriusServiceDesk/application-service/pkg/response"
 )
 
 type GetApplicationUserResponse struct {
@@ -16,15 +17,23 @@ type GetApplicationUserResponse struct {
 	CreatedAt       string        `json:"create_date" example:"21.05.2024"`
 }
 
-type CreateApplicationRequest struct {
-	Title     string  `json:"title" example:"сломался компутир"`
-	Comment   *string `json:"comment" example:"любой коментарий ваще"`
-	Performer string  `json:"performer" example:"Методический отдел"`
-}
-
 type GetApplicationUserResponseDoc struct {
-	RawResponse
+	response.RawResponse
 	Payload struct {
 		GetApplicationUserResponse
 	} `json:"payload"`
+}
+
+type ArrayOfApplications []GetApplicationUserResponse
+type GetApplicationsUserResponseDoc struct {
+	response.RawResponse
+	Payload struct {
+		ArrayOfApplications `json:"applications"`
+	} `json:"payload"`
+}
+
+type CreateApplicationRequest struct {
+	Title     string  `json:"title" example:"Любой заголовок до 20 символов"`
+	Comment   *string `json:"comment" example:"любой коммент или пустота"`
+	Performer string  `json:"performer" example:"Методический отдел"`
 }

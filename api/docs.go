@@ -33,6 +33,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/admin/applications/": {
+            "get": {
+                "description": "Get all applications (Admin only)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Get Applications",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer \u003ctoken\u003e",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsUserResponseDoc"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/applications": {
             "get": {
                 "security": [
@@ -63,14 +107,14 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/internal_web_application.GetApplicationUserResponseDoc"
+                                "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsUserResponseDoc"
                             }
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/internal_web_application.RawResponse"
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
                         }
                     }
                 }
@@ -106,7 +150,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/internal_web_application.CreateApplicationRequest"
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.CreateApplicationRequest"
                         }
                     }
                 ],
@@ -114,19 +158,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/internal_web_application.RawResponse"
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/internal_web_application.RawResponse"
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/internal_web_application.RawResponse"
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
                         }
                     }
                 }
@@ -167,19 +211,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/internal_web_application.GetApplicationUserResponseDoc"
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponseDoc"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/internal_web_application.RawResponse"
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/internal_web_application.RawResponse"
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
                         }
                     }
                 }
@@ -202,12 +246,12 @@ const docTemplate = `{
                 "Canceled"
             ]
         },
-        "internal_web_application.CreateApplicationRequest": {
+        "github_com_SiriusServiceDesk_application-service_internal_web.CreateApplicationRequest": {
             "type": "object",
             "properties": {
                 "comment": {
                     "type": "string",
-                    "example": "любой коментарий ваще"
+                    "example": "любой коммент или пустота"
                 },
                 "performer": {
                     "type": "string",
@@ -215,11 +259,56 @@ const docTemplate = `{
                 },
                 "title": {
                     "type": "string",
-                    "example": "сломался компутир"
+                    "example": "Любой заголовок до 20 символов"
                 }
             }
         },
-        "internal_web_application.GetApplicationUserResponseDoc": {
+        "github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponse": {
+            "type": "object",
+            "properties": {
+                "applicant": {
+                    "type": "string",
+                    "example": "23ger34-khsdb23G-23afh75-sdHvd"
+                },
+                "comment": {
+                    "type": "string",
+                    "example": "любой коментарий ваще"
+                },
+                "create_date": {
+                    "type": "string",
+                    "example": "21.05.2024"
+                },
+                "execution_period": {
+                    "type": "string",
+                    "example": "7 рабочих дней"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "000000001"
+                },
+                "performer": {
+                    "type": "string",
+                    "example": "Методический отдел"
+                },
+                "priority": {
+                    "type": "string",
+                    "example": "низкий"
+                },
+                "status": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Status"
+                        }
+                    ],
+                    "example": "Создана"
+                },
+                "title": {
+                    "type": "string",
+                    "example": "сломался кампутир"
+                }
+            }
+        },
+        "github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponseDoc": {
             "type": "object",
             "properties": {
                 "details": {},
@@ -274,7 +363,28 @@ const docTemplate = `{
                 }
             }
         },
-        "internal_web_application.RawResponse": {
+        "github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsUserResponseDoc": {
+            "type": "object",
+            "properties": {
+                "details": {},
+                "payload": {
+                    "type": "object",
+                    "properties": {
+                        "applications": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponse"
+                            }
+                        }
+                    }
+                },
+                "status": {
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        },
+        "github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse": {
             "type": "object",
             "properties": {
                 "details": {},

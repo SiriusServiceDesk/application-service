@@ -3,6 +3,7 @@ package initializers
 import (
 	"github.com/SiriusServiceDesk/application-service/internal/app/dependencies"
 	"github.com/SiriusServiceDesk/application-service/internal/web"
+	"github.com/SiriusServiceDesk/application-service/internal/web/admin"
 	"github.com/SiriusServiceDesk/application-service/internal/web/application"
 	"github.com/SiriusServiceDesk/application-service/internal/web/status"
 	"github.com/SiriusServiceDesk/application-service/internal/web/swagger"
@@ -22,5 +23,6 @@ func buildRouters(container *dependencies.Container) []web.Controller {
 		status.NewStatusController(),
 		swagger.NewSwaggerController(),
 		application.NewApplicationsController(container.ApplicationService),
+		admin.NewController(container.ApplicationService),
 	}
 }
