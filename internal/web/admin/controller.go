@@ -53,7 +53,7 @@ func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
 // Analytic provides statistics on applications
 // @Summary Get application analytics
 // @Description Retrieve statistics on applications, including the number of new applications today, all processed applications, applications processed today, and those in progress.
-// @Tags analytics
+// @Tags admin
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer <token>"
