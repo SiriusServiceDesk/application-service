@@ -6,7 +6,9 @@ import (
 	"github.com/SiriusServiceDesk/application-service/internal/middleware"
 	"github.com/SiriusServiceDesk/application-service/internal/models"
 	"github.com/SiriusServiceDesk/application-service/internal/services"
+	"github.com/SiriusServiceDesk/application-service/internal/web"
 	"github.com/SiriusServiceDesk/application-service/pkg/logger"
+	"github.com/SiriusServiceDesk/application-service/pkg/response"
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
 )
@@ -38,8 +40,8 @@ func (ctrl *Controller) DefineRouter(app *fiber.App) {
 // @Param Authorization header string true "Bearer <token>"
 // @Tags applications
 // @Produce json
-// @Success 200 {array} GetApplicationUserResponseDoc
-// @Failure 500 {object} RawResponse
+// @Success 200 {array} web.GetApplicationsUserResponseDoc
+// @Failure 500 {object} response.RawResponse
 // @Router /v1/applications [get]
 // @Security ApiKeyAuth
 func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
@@ -48,25 +50,16 @@ func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
 
 	userId, err := client.GetUserIdFromToken(authHeaders)
 	if err != nil {
-		return Response().WithDetails(err).ServerInternalError(ctx, "cant get user id")
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "cant get user id")
 	}
 
-	user, err := client.GetUserById(userId)
-	if err != nil {
-		return Response().WithDetails(err).ServerInternalError(ctx, "cant get user")
-	}
-
-	if user.GetRole() == "Админ" {
-		applications, err = ctrl.applicationService.GetAllApplications()
-	} else {
-		applications, err = ctrl.applicationService.GetApplicationByUserId(userId)
-	}
+	applications, err = ctrl.applicationService.GetApplicationByUserId(userId)
 
 	if err != nil {
-		return Response().WithDetails(err).ServerInternalError(ctx, "failed to get applications from database")
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get applications from database")
 	}
 
-	return Response().StatusOK(ctx, mappingApplicationsForUser(applications))
+	return response.Response().StatusOK(ctx, web.MappingApplicationsForUser(applications))
 }
 
 // getApplication получает заявку по ID
@@ -76,9 +69,9 @@ func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
 // @Param Authorization header string true "Bearer <token>"
 // @Produce json
 // @Param id path int true "ID заявки"
-// @Success 200 {object} GetApplicationUserResponseDoc
-// @Failure 400 {object} RawResponse
-// @Failure 500 {object} RawResponse
+// @Success 200 {object} web.GetApplicationUserResponseDoc
+// @Failure 400 {object} response.RawResponse
+// @Failure 500 {object} response.RawResponse
 // @Router /v1/applications/{id} [get]
 // @Security ApiKeyAuth
 func (ctrl *Controller) getApplication(ctx *fiber.Ctx) error {
@@ -87,31 +80,31 @@ func (ctrl *Controller) getApplication(ctx *fiber.Ctx) error {
 
 	applicationIdInt, err := helpers.FormatIdFromStringToUint(applicationId)
 	if err != nil {
-		return Response().WithDetails(err).ServerInternalError(ctx, "failed to convert from parameter")
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to convert from parameter")
 	}
 
 	application, err := ctrl.applicationService.GetApplicationById(applicationIdInt)
 	if err != nil {
-		return Response().WithDetails(err).ServerInternalError(ctx, "failed to get application from database")
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get application from database")
 	}
 
 	userId, err := client.GetUserIdFromToken(authHeaders)
 	if err != nil {
 		logger.Debug("cant get user id from auth-service", zap.Error(err))
-		return Response().WithDetails(err).ServerInternalError(ctx, "failed to get user from database")
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get user from database")
 	}
 
 	user, err := client.GetUserById(userId)
 	if err != nil {
 		logger.Debug("cant get user from auth-service", zap.Error(err))
-		return Response().WithDetails(err).ServerInternalError(ctx, "failed to get user")
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get user")
 	}
 
 	if userId != application.ApplicantId && user.GetRole() != "Админ" && user.GetRole() != application.PerformerId {
-		return Response().BadRequest(ctx, "user dont have permissions")
+		return response.Response().BadRequest(ctx, "user dont have permissions")
 	}
 
-	return Response().StatusOK(ctx, mappingApplicationForUser(application))
+	return response.Response().StatusOK(ctx, web.MappingApplicationForUser(application))
 }
 
 // createApplication создает новую заявку
@@ -121,23 +114,23 @@ func (ctrl *Controller) getApplication(ctx *fiber.Ctx) error {
 // @Param Authorization header string true "Bearer <token>"
 // @Accept json
 // @Produce json
-// @Param application body CreateApplicationRequest true "Создание заявки"
-// @Success 200 {object} RawResponse
-// @Failure 400 {object} RawResponse
-// @Failure 500 {object} RawResponse
+// @Param application body web.CreateApplicationRequest true "Создание заявки"
+// @Success 200 {object} response.RawResponse
+// @Failure 400 {object} response.RawResponse
+// @Failure 500 {object} response.RawResponse
 // @Router /v1/applications [post]
 // @Security ApiKeyAuth
 func (ctrl *Controller) createApplication(ctx *fiber.Ctx) error {
-	var request CreateApplicationRequest
+	var request web.CreateApplicationRequest
 	authHeader := ctx.GetReqHeaders()[fiber.HeaderAuthorization]
 
 	if err := ctx.BodyParser(&request); err != nil {
-		return Response().WithDetails(err).ServerInternalError(ctx, "failed to parse data")
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to parse data")
 	}
 
 	userId, err := client.GetUserIdFromToken(authHeader)
 	if err != nil {
-		return Response().WithDetails(err).ServerInternalError(ctx, "failed to get userId")
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get userId")
 	}
 
 	application := &models.Application{
@@ -149,10 +142,10 @@ func (ctrl *Controller) createApplication(ctx *fiber.Ctx) error {
 	}
 
 	if err := ctrl.applicationService.CreateApplication(application); err != nil {
-		return Response().WithDetails(err).ServerInternalError(ctx, "failed to create application")
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to create application")
 	}
 
-	return Response().StatusOK(ctx, "application created successfully")
+	return response.Response().StatusOK(ctx, "application created successfully")
 }
 
 func (ctrl *Controller) updateApplication(ctx *fiber.Ctx) error {
