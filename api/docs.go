@@ -59,7 +59,67 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsUserResponseDoc"
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsResponseDoc"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/admin/applications/{id}": {
+            "put": {
+                "description": "Update an existing application by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "applications"
+                ],
+                "summary": "Update Application",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Application ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Application Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.UpdateApplicationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "application updated",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
                         }
                     },
                     "400": {
@@ -107,7 +167,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsUserResponseDoc"
+                                "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsResponseDoc"
                             }
                         }
                     },
@@ -178,11 +238,6 @@ const docTemplate = `{
         },
         "/v1/applications/{id}": {
             "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
                 "description": "Получает заявку по ID для администратора или пользователя",
                 "produces": [
                     "application/json"
@@ -211,7 +266,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponseDoc"
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationResponseDoc"
                         }
                     },
                     "400": {
@@ -231,6 +286,19 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "github_com_SiriusServiceDesk_application-service_internal_models.Priority": {
+            "type": "string",
+            "enum": [
+                "Низкий",
+                "Средний",
+                "Высокий"
+            ],
+            "x-enum-varnames": [
+                "Low",
+                "Medium",
+                "High"
+            ]
+        },
         "github_com_SiriusServiceDesk_application-service_internal_models.Status": {
             "type": "string",
             "enum": [
@@ -263,7 +331,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponse": {
+        "github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationResponse": {
             "type": "object",
             "properties": {
                 "applicant": {
@@ -282,6 +350,10 @@ const docTemplate = `{
                     "type": "string",
                     "example": "7 рабочих дней"
                 },
+                "feedback": {
+                    "type": "string",
+                    "example": "тут инфа видно только админу"
+                },
                 "id": {
                     "type": "string",
                     "example": "000000001"
@@ -291,7 +363,11 @@ const docTemplate = `{
                     "example": "Методический отдел"
                 },
                 "priority": {
-                    "type": "string",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Priority"
+                        }
+                    ],
                     "example": "низкий"
                 },
                 "status": {
@@ -308,7 +384,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponseDoc": {
+        "github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationResponseDoc": {
             "type": "object",
             "properties": {
                 "details": {},
@@ -331,6 +407,10 @@ const docTemplate = `{
                             "type": "string",
                             "example": "7 рабочих дней"
                         },
+                        "feedback": {
+                            "type": "string",
+                            "example": "тут инфа видно только админу"
+                        },
                         "id": {
                             "type": "string",
                             "example": "000000001"
@@ -340,7 +420,11 @@ const docTemplate = `{
                             "example": "Методический отдел"
                         },
                         "priority": {
-                            "type": "string",
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Priority"
+                                }
+                            ],
                             "example": "низкий"
                         },
                         "status": {
@@ -363,7 +447,7 @@ const docTemplate = `{
                 }
             }
         },
-        "github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsUserResponseDoc": {
+        "github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsResponseDoc": {
             "type": "object",
             "properties": {
                 "details": {},
@@ -373,7 +457,7 @@ const docTemplate = `{
                         "applications": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponse"
+                                "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationResponse"
                             }
                         }
                     }
@@ -381,6 +465,35 @@ const docTemplate = `{
                 "status": {
                     "type": "integer",
                     "example": 200
+                }
+            }
+        },
+        "github_com_SiriusServiceDesk_application-service_internal_web.UpdateApplicationRequest": {
+            "type": "object",
+            "properties": {
+                "execution_period": {
+                    "type": "string",
+                    "example": "7 рабочих дней"
+                },
+                "feedback": {
+                    "type": "string",
+                    "example": "причина отказа или комментарий админа"
+                },
+                "priority": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Priority"
+                        }
+                    ],
+                    "example": "Низкий"
+                },
+                "status": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Status"
+                        }
+                    ],
+                    "example": "В работе"
                 }
             }
         },
