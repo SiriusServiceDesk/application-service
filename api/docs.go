@@ -77,6 +77,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/v1/admin/applications/analytic/": {
+            "get": {
+                "description": "Retrieve statistics on applications, including the number of new applications today, all processed applications, applications processed today, and those in progress.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "analytics"
+                ],
+                "summary": "Get application analytics",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Bearer \u003ctoken\u003e",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.AnalyticResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Failed to get applications",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/admin/applications/{id}": {
             "put": {
                 "description": "Update an existing application by ID",
@@ -313,6 +351,23 @@ const docTemplate = `{
                 "Executed",
                 "Canceled"
             ]
+        },
+        "github_com_SiriusServiceDesk_application-service_internal_web.AnalyticResponse": {
+            "type": "object",
+            "properties": {
+                "in_progress": {
+                    "type": "integer"
+                },
+                "new_today": {
+                    "type": "integer"
+                },
+                "processed": {
+                    "type": "integer"
+                },
+                "processed_today": {
+                    "type": "integer"
+                }
+            }
         },
         "github_com_SiriusServiceDesk_application-service_internal_web.CreateApplicationRequest": {
             "type": "object",

@@ -13,6 +13,16 @@ type ApplicationService interface {
 	GetApplicationsByUser(userId string) ([]*models.Application, error)
 	CreateApplication(application *models.Application) error
 	UpdateApplication(application *models.Application, id uint) error
+	GetProcessedApplications(statuses []models.Status) ([]*models.Application, error)
+	GetProcessedApplicationsWithDate(statuses []models.Status, date string) ([]*models.Application, error)
+}
+
+func (a ApplicationServiceImpl) GetProcessedApplications(statuses []models.Status) ([]*models.Application, error) {
+	return a.repos.GetProcessedApplications(statuses)
+}
+
+func (a ApplicationServiceImpl) GetProcessedApplicationsWithDate(statuses []models.Status, date string) ([]*models.Application, error) {
+	return a.repos.GetProcessedApplicationsWithDate(statuses, date)
 }
 
 func (a ApplicationServiceImpl) GetApplicationsByUser(userId string) ([]*models.Application, error) {

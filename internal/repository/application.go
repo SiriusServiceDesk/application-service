@@ -15,6 +15,24 @@ type ApplicationRepository interface {
 	Create(application *models.Application) error
 	Update(application *models.Application) error
 	GetApplicationsByUser(userId string) ([]*models.Application, error)
+	GetProcessedApplications(statuses []models.Status) ([]*models.Application, error)
+	GetProcessedApplicationsWithDate(statuses []models.Status, date string) ([]*models.Application, error)
+}
+
+func (a ApplicationRepositoryImpl) GetProcessedApplications(statuses []models.Status) ([]*models.Application, error) {
+	var applications []*models.Application
+	if err := a.db.Where("status in ?", statuses).Find(&applications).Error; err != nil {
+		return nil, err
+	}
+	return applications, nil
+}
+
+func (a ApplicationRepositoryImpl) GetProcessedApplicationsWithDate(statuses []models.Status, date string) ([]*models.Application, error) {
+	var applications []*models.Application
+	if err := a.db.Where("DATE(created_at) = ? and status in ?", date, statuses).Find(&applications).Error; err != nil {
+		return nil, err
+	}
+	return applications, nil
 }
 
 func (a ApplicationRepositoryImpl) GetApplicationsByUser(userId string) ([]*models.Application, error) {

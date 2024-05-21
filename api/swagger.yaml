@@ -21,6 +21,17 @@ definitions:
     - Pending
     - Executed
     - Canceled
+  github_com_SiriusServiceDesk_application-service_internal_web.AnalyticResponse:
+    properties:
+      in_progress:
+        type: integer
+      new_today:
+        type: integer
+      processed:
+        type: integer
+      processed_today:
+        type: integer
+    type: object
   github_com_SiriusServiceDesk_application-service_internal_web.CreateApplicationRequest:
     properties:
       comment:
@@ -242,6 +253,33 @@ paths:
       summary: Update Application
       tags:
       - applications
+  /v1/admin/applications/analytic/:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve statistics on applications, including the number of new
+        applications today, all processed applications, applications processed today,
+        and those in progress.
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.AnalyticResponse'
+        "500":
+          description: Failed to get applications
+          schema:
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
+      summary: Get application analytics
+      tags:
+      - analytics
   /v1/applications:
     get:
       description: Получает список заявок для администратора или пользователя
