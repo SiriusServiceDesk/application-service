@@ -87,7 +87,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "analytics"
+                    "admin"
                 ],
                 "summary": "Get application analytics",
                 "parameters": [

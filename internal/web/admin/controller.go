@@ -53,7 +53,7 @@ func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
 // Analytic provides statistics on applications
 // @Summary Get application analytics
 // @Description Retrieve statistics on applications, including the number of new applications today, all processed applications, applications processed today, and those in progress.
-// @Tags analytics
+// @Tags admin
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer <token>"
@@ -73,21 +73,20 @@ func (ctrl *Controller) analytic(ctx *fiber.Ctx) error {
 		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get applications")
 	}
 
-	today := time.Now().Format("2006-01-02")
-	todayStatues := []models.Status{models.Canceled, models.InProgress, models.Pending, models.Executed}
-
-	newApplicationsToday, err := ctrl.applicationService.GetProcessedApplicationsWithDate(todayStatues, today)
+	todayStatues := []models.Status{models.Pending}
+	newApplications, err := ctrl.applicationService.GetProcessedApplications(todayStatues)
 	if err != nil {
 		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get applications")
 	}
 
+	today := time.Now().Format("2006-01-02")
 	todayProcessed, err := ctrl.applicationService.GetProcessedApplicationsWithDate(processedStatuses, today)
 	if err != nil {
 		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get applications")
 	}
 
 	analyticResponse := web.AnalyticResponse{
-		NewApplicationsToday:     len(newApplicationsToday),
+		NewApplicationsToday:     len(newApplications),
 		AllProcessedApplications: len(allProcessed),
 		ProcessedToday:           len(todayProcessed),
 		InProgress:               len(inProgress),
