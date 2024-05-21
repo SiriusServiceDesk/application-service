@@ -45,3 +45,17 @@ type UpdateApplicationRequest struct {
 	ExecutionPeriod string          `json:"execution_period" example:"7 рабочих дней"`
 	FeedBack        string          `json:"feedback" example:"причина отказа или комментарий админа"`
 }
+
+type AnalyticResponse struct {
+	NewApplicationsToday     int `json:"new_today"`
+	AllProcessedApplications int `json:"processed"`
+	ProcessedToday           int `json:"processed_today"`
+	InProgress               int `json:"in_progress"`
+}
+
+type AnalyticResponseDoc struct {
+	response.RawResponse
+	Payload struct {
+		AnalyticResponse
+	} `json:"payload"`
+}
