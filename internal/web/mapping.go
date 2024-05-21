@@ -1,4 +1,4 @@
-package application
+package web
 
 import (
 	"github.com/SiriusServiceDesk/application-service/internal/helpers"
@@ -6,7 +6,7 @@ import (
 	"sort"
 )
 
-func mappingApplicationForUser(application *models.Application) GetApplicationUserResponse {
+func MappingApplicationForUser(application *models.Application) GetApplicationUserResponse {
 	return GetApplicationUserResponse{
 		Id:              helpers.FormatIdFromUintToString(application.Id),
 		Title:           application.Title,
@@ -19,7 +19,7 @@ func mappingApplicationForUser(application *models.Application) GetApplicationUs
 	}
 }
 
-func mappingApplicationsForUser(applications []*models.Application) []GetApplicationUserResponse {
+func MappingApplicationsForUser(applications []*models.Application) []GetApplicationUserResponse {
 	var result []GetApplicationUserResponse
 	for _, application := range applications {
 		result = append(result, GetApplicationUserResponse{
