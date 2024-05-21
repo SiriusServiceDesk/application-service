@@ -43,13 +43,14 @@ func (a ApplicationServiceImpl) UpdateApplication(application *models.Applicatio
 
 	existing = &models.Application{
 		Id:              existing.Id,
-		Title:           application.Title,
-		Status:          existing.Status,
-		Priority:        existing.Priority,
+		Title:           existing.Title,
+		Status:          application.Status,
+		Priority:        application.Priority,
 		PerformerId:     existing.PerformerId,
-		Comment:         application.Comment,
+		Comment:         existing.Comment,
 		ApplicantId:     existing.ApplicantId,
 		ExecutionPeriod: application.ExecutionPeriod,
+		FeedBack:        application.FeedBack,
 		CreatedAt:       existing.CreatedAt,
 		UpdatedAt:       time.Now(),
 	}

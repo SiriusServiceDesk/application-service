@@ -19,7 +19,7 @@ func NewController(applicationService services.ApplicationService) *Controller {
 }
 
 func (ctrl *Controller) DefineRouter(app *fiber.App) {
-	adminGroup := app.Group("/v1/admin/applications/")
+	adminGroup := app.Group("/v1/admin/applications")
 
 	adminGroup.Use(middleware.SetupCORS())
 	adminGroup.Use(middleware.NewAdminMiddleware())
@@ -35,7 +35,7 @@ func (ctrl *Controller) DefineRouter(app *fiber.App) {
 // @Accept json
 // @Produce json
 // @Param Authorization header string true "Bearer <token>"
-// @Success 200 {object} web.GetApplicationsUserResponseDoc
+// @Success 200 {object} web.GetApplicationsResponseDoc
 // @Failure 400 {object} response.RawResponse
 // @Failure 500 {object} response.RawResponse
 // @Router /v1/admin/applications/ [get]
@@ -44,5 +44,5 @@ func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
 	if err != nil {
 		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get applications")
 	}
-	return response.Response().StatusOK(ctx, web.MappingApplicationsForUser(applications))
+	return response.Response().StatusOK(ctx, web.MappingApplicationsForAdmin(applications))
 }

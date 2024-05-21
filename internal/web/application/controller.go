@@ -40,7 +40,7 @@ func (ctrl *Controller) DefineRouter(app *fiber.App) {
 // @Param Authorization header string true "Bearer <token>"
 // @Tags applications
 // @Produce json
-// @Success 200 {array} web.GetApplicationsUserResponseDoc
+// @Success 200 {array} web.GetApplicationsResponseDoc
 // @Failure 500 {object} response.RawResponse
 // @Router /v1/applications [get]
 // @Security ApiKeyAuth
@@ -69,11 +69,10 @@ func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
 // @Param Authorization header string true "Bearer <token>"
 // @Produce json
 // @Param id path int true "ID заявки"
-// @Success 200 {object} web.GetApplicationUserResponseDoc
+// @Success 200 {object} web.GetApplicationResponseDoc
 // @Failure 400 {object} response.RawResponse
 // @Failure 500 {object} response.RawResponse
 // @Router /v1/applications/{id} [get]
-// @Security ApiKeyAuth
 func (ctrl *Controller) getApplication(ctx *fiber.Ctx) error {
 	applicationId := ctx.Params("id")
 	authHeaders := ctx.GetReqHeaders()[fiber.HeaderAuthorization]
@@ -148,6 +147,56 @@ func (ctrl *Controller) createApplication(ctx *fiber.Ctx) error {
 	return response.Response().StatusOK(ctx, "application created successfully")
 }
 
+// updateApplication updates an application
+// @Summary Update Application
+// @Description Update an existing application by ID
+// @Tags applications
+// @Accept json
+// @Produce json
+// @Param id path string true "Application ID"
+// @Param Authorization header string true "Authorization token"
+// @Param request body web.UpdateApplicationRequest true "Update Application Request"
+// @Success 200 {object} response.RawResponse "application updated"
+// @Failure 400 {object} response.RawResponse "Bad Request"
+// @Failure 500 {object} response.RawResponse "Internal Server Error"
+// @Router /v1/admin/applications/{id} [put]
 func (ctrl *Controller) updateApplication(ctx *fiber.Ctx) error {
-	panic("not implemented")
+	authHeaders := ctx.GetReqHeaders()[fiber.HeaderAuthorization]
+	id := ctx.Params("id")
+	var request web.UpdateApplicationRequest
+
+	if err := ctx.BodyParser(&request); err != nil {
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to parse data")
+	}
+
+	userId, err := client.GetUserIdFromToken(authHeaders)
+	if err != nil {
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get user id")
+	}
+
+	user, err := client.GetUserById(userId)
+	if err != nil {
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get user")
+	}
+
+	if user.GetRole() == "Пользователь" {
+		return response.Response().BadRequest(ctx, "permission denied")
+	}
+	uintId, err := helpers.FormatIdFromStringToUint(id)
+	if err != nil {
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to format id")
+	}
+
+	newApplication := &models.Application{
+		Status:          request.Status,
+		Priority:        request.Priority,
+		ExecutionPeriod: request.ExecutionPeriod,
+		FeedBack:        request.FeedBack,
+	}
+
+	if err := ctrl.applicationService.UpdateApplication(newApplication, uintId); err != nil {
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to update application")
+	}
+
+	return response.Response().StatusOK(ctx, "application updated")
 }

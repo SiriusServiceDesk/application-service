@@ -1,4 +1,14 @@
 definitions:
+  github_com_SiriusServiceDesk_application-service_internal_models.Priority:
+    enum:
+    - Низкий
+    - Средний
+    - Высокий
+    type: string
+    x-enum-varnames:
+    - Low
+    - Medium
+    - High
   github_com_SiriusServiceDesk_application-service_internal_models.Status:
     enum:
     - В работе
@@ -23,7 +33,7 @@ definitions:
         example: Любой заголовок до 20 символов
         type: string
     type: object
-  github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponse:
+  github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationResponse:
     properties:
       applicant:
         example: 23ger34-khsdb23G-23afh75-sdHvd
@@ -37,6 +47,9 @@ definitions:
       execution_period:
         example: 7 рабочих дней
         type: string
+      feedback:
+        example: тут инфа видно только админу
+        type: string
       id:
         example: "000000001"
         type: string
@@ -44,8 +57,9 @@ definitions:
         example: Методический отдел
         type: string
       priority:
+        allOf:
+        - $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Priority'
         example: низкий
-        type: string
       status:
         allOf:
         - $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Status'
@@ -54,7 +68,7 @@ definitions:
         example: сломался кампутир
         type: string
     type: object
-  github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponseDoc:
+  github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationResponseDoc:
     properties:
       details: {}
       payload:
@@ -71,6 +85,9 @@ definitions:
           execution_period:
             example: 7 рабочих дней
             type: string
+          feedback:
+            example: тут инфа видно только админу
+            type: string
           id:
             example: "000000001"
             type: string
@@ -78,8 +95,9 @@ definitions:
             example: Методический отдел
             type: string
           priority:
+            allOf:
+            - $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Priority'
             example: низкий
-            type: string
           status:
             allOf:
             - $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Status'
@@ -92,19 +110,36 @@ definitions:
         example: 200
         type: integer
     type: object
-  github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsUserResponseDoc:
+  github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsResponseDoc:
     properties:
       details: {}
       payload:
         properties:
           applications:
             items:
-              $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponse'
+              $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationResponse'
             type: array
         type: object
       status:
         example: 200
         type: integer
+    type: object
+  github_com_SiriusServiceDesk_application-service_internal_web.UpdateApplicationRequest:
+    properties:
+      execution_period:
+        example: 7 рабочих дней
+        type: string
+      feedback:
+        example: причина отказа или комментарий админа
+        type: string
+      priority:
+        allOf:
+        - $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Priority'
+        example: Низкий
+      status:
+        allOf:
+        - $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_models.Status'
+        example: В работе
     type: object
   github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse:
     properties:
@@ -155,7 +190,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsUserResponseDoc'
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsResponseDoc'
         "400":
           description: Bad Request
           schema:
@@ -167,6 +202,46 @@ paths:
       summary: Get Applications
       tags:
       - admin
+  /v1/admin/applications/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update an existing application by ID
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Update Application Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.UpdateApplicationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: application updated
+          schema:
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
+      summary: Update Application
+      tags:
+      - applications
   /v1/applications:
     get:
       description: Получает список заявок для администратора или пользователя
@@ -183,7 +258,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsUserResponseDoc'
+              $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationsResponseDoc'
             type: array
         "500":
           description: Internal Server Error
@@ -250,7 +325,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationUserResponseDoc'
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.GetApplicationResponseDoc'
         "400":
           description: Bad Request
           schema:
@@ -259,8 +334,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
-      security:
-      - ApiKeyAuth: []
       summary: Получить заявку
       tags:
       - applications
