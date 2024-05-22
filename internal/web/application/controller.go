@@ -235,7 +235,6 @@ func (ctrl *Controller) updateApplication(ctx *fiber.Ctx) error {
 
 	if err = client.SendMessage(message); err != nil {
 		logger.Info("create message error", zap.Error(err))
-		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to send message")
 	}
 
 	return response.Response().StatusOK(ctx, "application updated")
