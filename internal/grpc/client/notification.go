@@ -16,7 +16,7 @@ type Message struct {
 }
 
 type UpdateApplicationData struct {
-	Id      string `json:"Id"`
+	Id      string `json:"AppId"`
 	Status  string `json:"Status"`
 	Comment string `json:"Comment"`
 }
