@@ -20,10 +20,15 @@ type Db struct {
 }
 
 type Config struct {
-	Env         string      `yaml:"env" env-required:"true"`
-	HttpServer  HttpServer  `yaml:"http_server"`
-	Db          Db          `yaml:"db"`
-	AuthService AuthService `yaml:"auth_service"`
+	Env                 string              `yaml:"env" env-required:"true"`
+	HttpServer          HttpServer          `yaml:"http_server"`
+	Db                  Db                  `yaml:"db"`
+	AuthService         AuthService         `yaml:"auth_service"`
+	NotificationService NotificationService `yaml:"notification_service"`
+}
+
+type NotificationService struct {
+	Address string `yaml:"address"`
 }
 
 type AuthService struct {

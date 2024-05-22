@@ -44,6 +44,7 @@ type UpdateApplicationRequest struct {
 	Priority        models.Priority `json:"priority" example:"Низкий"`
 	ExecutionPeriod string          `json:"execution_period" example:"7 рабочих дней"`
 	FeedBack        string          `json:"feedback" example:"причина отказа или комментарий админа"`
+	Performer       string          `json:"performer" example:"Методический отдел"`
 }
 
 type AnalyticResponse struct {
