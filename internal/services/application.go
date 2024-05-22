@@ -56,7 +56,7 @@ func (a ApplicationServiceImpl) UpdateApplication(application *models.Applicatio
 		Title:           existing.Title,
 		Status:          application.Status,
 		Priority:        application.Priority,
-		PerformerId:     existing.PerformerId,
+		PerformerId:     application.PerformerId,
 		Comment:         existing.Comment,
 		ApplicantId:     existing.ApplicantId,
 		ExecutionPeriod: application.ExecutionPeriod,

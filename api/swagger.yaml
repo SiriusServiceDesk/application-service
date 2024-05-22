@@ -4,11 +4,13 @@ definitions:
     - Низкий
     - Средний
     - Высокий
+    - Не назначен
     type: string
     x-enum-varnames:
     - Low
     - Medium
     - High
+    - NotSet
   github_com_SiriusServiceDesk_application-service_internal_models.Status:
     enum:
     - В работе
@@ -25,7 +27,7 @@ definitions:
     properties:
       in_progress:
         type: integer
-      new_today:
+      pending:
         type: integer
       processed:
         type: integer
@@ -213,46 +215,6 @@ paths:
       summary: Get Applications
       tags:
       - admin
-  /v1/admin/applications/{id}:
-    put:
-      consumes:
-      - application/json
-      description: Update an existing application by ID
-      parameters:
-      - description: Application ID
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: Authorization token
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      - description: Update Application Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.UpdateApplicationRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: application updated
-          schema:
-            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
-      summary: Update Application
-      tags:
-      - applications
   /v1/admin/applications/analytic/:
     get:
       consumes:
@@ -373,6 +335,45 @@ paths:
           schema:
             $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
       summary: Получить заявку
+      tags:
+      - applications
+    put:
+      consumes:
+      - application/json
+      description: Update an existing application by ID
+      parameters:
+      - description: Application ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Authorization token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Update Application Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.UpdateApplicationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: application updated
+          schema:
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse'
+      summary: Update Application
       tags:
       - applications
 swagger: "2.0"

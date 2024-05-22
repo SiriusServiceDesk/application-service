@@ -115,66 +115,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/admin/applications/{id}": {
-            "put": {
-                "description": "Update an existing application by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "applications"
-                ],
-                "summary": "Update Application",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Application ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "Authorization token",
-                        "name": "Authorization",
-                        "in": "header",
-                        "required": true
-                    },
-                    {
-                        "description": "Update Application Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.UpdateApplicationRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "application updated",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/v1/applications": {
             "get": {
                 "security": [
@@ -320,6 +260,64 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "put": {
+                "description": "Update an existing application by ID",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "applications"
+                ],
+                "summary": "Update Application",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Application ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Application Request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_internal_web.UpdateApplicationRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "application updated",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/github_com_SiriusServiceDesk_application-service_pkg_response.RawResponse"
+                        }
+                    }
+                }
             }
         }
     },
@@ -329,12 +327,14 @@ const docTemplate = `{
             "enum": [
                 "Низкий",
                 "Средний",
-                "Высокий"
+                "Высокий",
+                "Не назначен"
             ],
             "x-enum-varnames": [
                 "Low",
                 "Medium",
-                "High"
+                "High",
+                "NotSet"
             ]
         },
         "github_com_SiriusServiceDesk_application-service_internal_models.Status": {
@@ -358,7 +358,7 @@ const docTemplate = `{
                 "in_progress": {
                     "type": "integer"
                 },
-                "new_today": {
+                "pending": {
                     "type": "integer"
                 },
                 "processed": {

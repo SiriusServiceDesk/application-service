@@ -1,6 +1,7 @@
 package application
 
 import (
+	"encoding/json"
 	"github.com/SiriusServiceDesk/application-service/internal/grpc/client"
 	"github.com/SiriusServiceDesk/application-service/internal/helpers"
 	"github.com/SiriusServiceDesk/application-service/internal/middleware"
@@ -160,7 +161,7 @@ func (ctrl *Controller) createApplication(ctx *fiber.Ctx) error {
 // @Success 200 {object} response.RawResponse "application updated"
 // @Failure 400 {object} response.RawResponse "Bad Request"
 // @Failure 500 {object} response.RawResponse "Internal Server Error"
-// @Router /v1/admin/applications/{id} [put]
+// @Router /v1/applications/{id} [put]
 func (ctrl *Controller) updateApplication(ctx *fiber.Ctx) error {
 	authHeaders := ctx.GetReqHeaders()[fiber.HeaderAuthorization]
 	id := ctx.Params("id")
@@ -193,10 +194,48 @@ func (ctrl *Controller) updateApplication(ctx *fiber.Ctx) error {
 		Priority:        request.Priority,
 		ExecutionPeriod: request.ExecutionPeriod,
 		FeedBack:        request.FeedBack,
+		PerformerId:     request.Performer,
 	}
 
 	if err := ctrl.applicationService.UpdateApplication(newApplication, uintId); err != nil {
 		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to update application")
+	}
+
+	application, err := ctrl.applicationService.GetApplicationById(uintId)
+	if err != nil {
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get application")
+	}
+
+	messageData := client.UpdateApplicationData{
+		Id:     id,
+		Status: string(request.Status),
+	}
+
+	if len(request.FeedBack) != 0 {
+		messageData.Comment = request.FeedBack
+	}
+
+	jsonData, err := json.Marshal(messageData)
+	if err != nil {
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to marshal message data")
+	}
+
+	applicant, err := client.GetUserById(application.ApplicantId)
+	if err != nil {
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to get applicant")
+	}
+
+	message := client.Message{
+		Subject:      "Update application",
+		To:           []string{applicant.GetEmail()},
+		Data:         string(jsonData),
+		TemplateName: "updateApplication",
+		Type:         "email",
+	}
+
+	if err = client.SendMessage(message); err != nil {
+		logger.Info("create message error", zap.Error(err))
+		return response.Response().WithDetails(err).ServerInternalError(ctx, "failed to send message")
 	}
 
 	return response.Response().StatusOK(ctx, "application updated")
