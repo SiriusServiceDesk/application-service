@@ -160,7 +160,7 @@ func (ctrl *Controller) createApplication(ctx *fiber.Ctx) error {
 // @Success 200 {object} response.RawResponse "application updated"
 // @Failure 400 {object} response.RawResponse "Bad Request"
 // @Failure 500 {object} response.RawResponse "Internal Server Error"
-// @Router /v1/admin/applications/{id} [put]
+// @Router /v1/applications/{id} [put]
 func (ctrl *Controller) updateApplication(ctx *fiber.Ctx) error {
 	authHeaders := ctx.GetReqHeaders()[fiber.HeaderAuthorization]
 	id := ctx.Params("id")
