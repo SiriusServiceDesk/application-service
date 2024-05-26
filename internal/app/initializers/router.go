@@ -5,6 +5,7 @@ import (
 	"github.com/SiriusServiceDesk/application-service/internal/web"
 	"github.com/SiriusServiceDesk/application-service/internal/web/admin"
 	"github.com/SiriusServiceDesk/application-service/internal/web/application"
+	"github.com/SiriusServiceDesk/application-service/internal/web/prometheus"
 	"github.com/SiriusServiceDesk/application-service/internal/web/status"
 	"github.com/SiriusServiceDesk/application-service/internal/web/swagger"
 	"github.com/gofiber/fiber/v2"
@@ -24,5 +25,6 @@ func buildRouters(container *dependencies.Container) []web.Controller {
 		swagger.NewSwaggerController(),
 		application.NewApplicationsController(container.ApplicationService),
 		admin.NewController(container.ApplicationService),
+		prometheus.NewPrometheusController(),
 	}
 }
