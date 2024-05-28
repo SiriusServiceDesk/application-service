@@ -14,7 +14,7 @@ func MappingApplicationForUser(application *models.Application) GetApplicationRe
 		Status:          application.Status,
 		Comment:         application.Comment,
 		ApplicantId:     application.ApplicantId,
-		Performer:       application.PerformerId,
+		Performer:       cleanPerformer(application.PerformerId),
 		ExecutionPeriod: application.ExecutionPeriod,
 		CreatedAt:       helpers.FormatDate(application.CreatedAt),
 	}
@@ -29,7 +29,7 @@ func MappingApplicationsForUser(applications []*models.Application) []GetApplica
 			Status:          application.Status,
 			Comment:         application.Comment,
 			ApplicantId:     application.ApplicantId,
-			Performer:       application.PerformerId,
+			Performer:       cleanPerformer(application.PerformerId),
 			ExecutionPeriod: application.ExecutionPeriod,
 			CreatedAt:       helpers.FormatDate(application.CreatedAt),
 		})
@@ -52,7 +52,7 @@ func MappingApplicationForAdmin(application *models.Application) GetApplicationR
 		Id:              helpers.FormatIdFromUintToString(application.Id),
 		Title:           application.Title,
 		Status:          application.Status,
-		Performer:       application.PerformerId,
+		Performer:       cleanPerformer(application.PerformerId),
 		Priority:        application.Priority,
 		Comment:         application.Comment,
 		ApplicantId:     user.GetName() + " " + user.GetSurname(),
@@ -70,7 +70,7 @@ func MappingApplicationsForAdmin(applications []*models.Application) []GetApplic
 			Id:              helpers.FormatIdFromUintToString(application.Id),
 			Title:           application.Title,
 			Status:          application.Status,
-			Performer:       application.PerformerId,
+			Performer:       cleanPerformer(application.PerformerId),
 			Priority:        application.Priority,
 			Comment:         application.Comment,
 			ApplicantId:     user.GetName() + " " + user.GetSurname(),
@@ -89,4 +89,13 @@ func MappingApplicationsForAdmin(applications []*models.Application) []GetApplic
 	})
 
 	return result
+}
+
+func cleanPerformer(performer string) string {
+	switch performer {
+	case "":
+		return "Не назначен"
+	default:
+		return performer
+	}
 }
