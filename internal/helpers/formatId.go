@@ -7,7 +7,7 @@ import (
 
 func FormatIdFromUintToString(id uint) string {
 	stringId := strconv.Itoa(int(id))
-	return strings.Repeat("0", 9-len(stringId)) + stringId
+	return strings.Repeat("0", 6-len(stringId)) + stringId
 }
 
 func FormatIdFromStringToUint(id string) (uint, error) {
