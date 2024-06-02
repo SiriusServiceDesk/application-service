@@ -25,6 +25,7 @@ func createConnectionToAuthService() (auth_v1.AuthV1Client, error) {
 func GetUserIdFromToken(header []string) (string, error) {
 	conn, err := createConnectionToAuthService()
 	if err != nil {
+		logger.Info("userId", zap.Error(err))
 		return "", err
 	}
 	ctx := context.Background()
@@ -33,6 +34,8 @@ func GetUserIdFromToken(header []string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	logger.Info("userId", zap.String("userId", response.GetUserId()))
 
 	return response.GetUserId(), nil
 }
