@@ -29,7 +29,7 @@ func (a ApplicationRepositoryImpl) GetProcessedApplications(statuses []models.St
 
 func (a ApplicationRepositoryImpl) GetProcessedApplicationsWithDate(statuses []models.Status, date string) ([]*models.Application, error) {
 	var applications []*models.Application
-	if err := a.db.Where("DATE(created_at) = ? and status in ?", date, statuses).Find(&applications).Error; err != nil {
+	if err := a.db.Where("DATE(updated_at) = ? and status in ?", date, statuses).Find(&applications).Error; err != nil {
 		return nil, err
 	}
 	return applications, nil
