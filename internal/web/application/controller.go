@@ -51,6 +51,7 @@ func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
 
 	userId, err := client.GetUserIdFromToken(authHeaders)
 	if err != nil {
+		logger.Error("error on getting user", zap.Error(err))
 		return response.Response().WithDetails(err).ServerInternalError(ctx, "cant get user id")
 	}
 
