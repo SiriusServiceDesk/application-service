@@ -3,7 +3,7 @@ module github.com/SiriusServiceDesk/application-service
 go 1.21.5
 
 require (
-	github.com/SiriusServiceDesk/gateway-service v0.0.11
+	github.com/SiriusServiceDesk/gateway-service v0.0.12
 	github.com/gofiber/fiber/v2 v2.52.0
 	github.com/gofiber/swagger v1.0.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
