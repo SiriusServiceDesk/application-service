@@ -48,10 +48,12 @@ func (ctrl *Controller) DefineRouter(app *fiber.App) {
 func (ctrl *Controller) getApplications(ctx *fiber.Ctx) error {
 	var applications []*models.Application
 	authHeaders := ctx.GetReqHeaders()[fiber.HeaderAuthorization]
+	logger.Info("all apps", zap.Any("headers", authHeaders))
 
 	userId, err := client.GetUserIdFromToken(authHeaders)
+	logger.Info("userId", zap.String("userId", userId))
 	if err != nil {
-		logger.Error("error on getting user", zap.Error(err))
+		logger.Info("error on getting user", zap.Error(err))
 		return response.Response().WithDetails(err).ServerInternalError(ctx, "cant get user id")
 	}
 
